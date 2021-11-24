@@ -10,8 +10,11 @@ class Graph {
         Class(int& L, int& C);
         Class();
         ~Class();
+
+
+        void affiche_valeur_graph();
     private:
-        Altitude *Graph;
+        Altitude *grille_graph;
         int Lignes;
         int Colonnes;
 
