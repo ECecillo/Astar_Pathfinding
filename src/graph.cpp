@@ -1,4 +1,7 @@
 #include "module/graph.h"
+#include "module/altitude.h"
+
+using namespace std;
 
 Graph::Graph()
 {
@@ -6,14 +9,17 @@ Graph::Graph()
     Colonnes = 0;
     grille_sommet = NULL; // Met la pointeur de la grille à NULL.
 }
+
 Graph::Graph(int &L, int &C) : Lignes(L), Colonnes(C) 
 {
     grille_sommet = new Noeud[Lignes*Colonnes]; // On créer un tableau sur le TAS de dimension (nb Lignes * nb Colonnes).
+    Altitude h = 0;
     for(int i = 0; i < Lignes*Colonnes; i++)
     {
-        grille_sommet[i].set_hauteur() = 0;
+        grille_sommet[i].set_hauteur(h);
     }
 }
+
 // Pour accéder à la première ligne du tableau 1D on fait :
 // *Graph[C * i + j]
 /*
@@ -38,7 +44,11 @@ Graph::Graph(int &L, int &C) : Lignes(L), Colonnes(C)
  On aura pour la première ligne de la grille : 
 
  ___ 0__ 1__  2__  3__ 4____
- 0 | 0 | 12 | 34 | 5 | 10 |
+ 0 | 12 | 34 | 5 | 10 | 5 |
+.....
+
+
+
 
 
 
