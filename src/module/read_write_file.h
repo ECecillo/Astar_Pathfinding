@@ -13,9 +13,9 @@ class RW_File
 public:
     RW_File();
     // On utilisera les champs L
-    RW_File(int L, int C, string f);
+    RW_File(int &L, int &C, string& f);
     // On utilisera que le champ file pour lire le fichier.
-    RW_File(string file);
+    RW_File(string& file);
     ~RW_File();
 
 private:
