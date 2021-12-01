@@ -4,14 +4,14 @@ Graph::Graph()
 {
     Lignes = 0;
     Colonnes = 0;
-    Graph = NULL;
+    grille_sommet = NULL; // Met la pointeur de la grille à NULL.
 }
 Graph::Graph(int &L, int &C) : Lignes(L), Colonnes(C) 
 {
-    *Graph = new [Lignes*Colonnes]; // On créer un tableau sur le TAS de dimension (nb Lignes * nb Colonnes).
+    grille_sommet = new Noeud[Lignes*Colonnes]; // On créer un tableau sur le TAS de dimension (nb Lignes * nb Colonnes).
     for(int i = 0; i < Lignes*Colonnes; i++)
     {
-        (*grille_graph[i]) = 0;
+        grille_sommet[i].set_hauteur() = 0;
     }
 }
 // Pour accéder à la première ligne du tableau 1D on fait :
