@@ -1,20 +1,21 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
-#include "altitude.h"
+#include <iostream>
+#include "noeud.h"
 
 class Graph {
     public:
         // L : Le nombre de ligne.
         // C : le nombre de Colonne pour le tableau.
-        Class(int& L, int& C);
-        Class();
-        ~Class();
+        Graph();
+        Graph(int& L, int& C);
+        ~Graph();
 
 
         void affiche_valeur_graph();
     private:
-        Altitude *grille_graph;
+        Noeud * grille_sommet;
         int Lignes;
         int Colonnes;
 
