@@ -12,7 +12,7 @@ public:
     Noeud(Altitude &);
     ~Noeud();
 
-    void set_hauteur(Altitude&);
+    void set_hauteur(Altitude);
     Altitude get_hauteur();
 
     void set_couleur(char&);
@@ -22,6 +22,9 @@ public:
     void set_pos(pair<int,int>& nouvelle_pos);
     int get_pos_i();
     int get_pos_j();
+
+    // Affiche le Noeud avec ces infos (hauteur, coord )
+    void affiche_noeud();
 
 
 private:

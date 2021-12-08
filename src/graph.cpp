@@ -9,23 +9,12 @@ Graph::Graph()
     Colonnes = 0;
     grille_sommet = NULL; // Met la pointeur de la grille à NULL.
 }
-Graph::Graph(int &L, int &C) : Lignes(L), Colonnes(C)
+Graph::Graph(string nomFichier)
 {
-    grille_sommet = new Noeud[Lignes * Colonnes]; // On créer un tableau sur le TAS de dimension (nb Lignes * nb Colonnes).
-    Altitude h = 0;
+    // On créer un tableau sur le TAS de dimension (nb Lignes * nb Colonnes).
+    lecture_fichier_graph(nomFichier);
     // Lors de l'initialisation de la hauteur pour chaque case de la grille, on mettra dans la donnée membre du noeud l'indice de parcours de ligne et de colonne respectivement i et j.
-    for (int i = 0; i < Lignes; i++)
-    {
-        for (int j = 0; j < Colonnes; j++)
-        {
-            // Pour plus de lisibilité.
-            Noeud noeud_courant = grille_sommet[i * Colonnes + j];
-            
-            noeud_courant.set_hauteur(h);
-            pair<int, int> poistion_noeud_grille(i, j);
-            noeud_courant.set_pos(poistion_noeud_grille);
-        }
-    }
+    cout << grille_sommet[0].get_hauteur() << endl;
 }
 Graph::~Graph()
 {
@@ -33,6 +22,48 @@ Graph::~Graph()
     Colonnes = 0;
     delete[] grille_sommet;
     grille_sommet = NULL;
+}
+
+void Graph::lecture_fichier_graph(string nomFichier)
+{
+    // Varible locale pour définir la hauteur pour chaque noeud.
+    int hauteur_noeud;
+    // Debut lecture fichier.
+    ifstream fichier(nomFichier.c_str());
+    if (fichier.is_open())
+    {
+        // On initialise la taille du graph.
+        fichier >> Colonnes;
+        fichier >> Lignes;
+        grille_sommet = new Noeud[Lignes * Colonnes];
+        for (int i = 0; i < Lignes; i++)
+        {
+            for (int j = 0; j < Colonnes; j++)
+            {
+                if (!fichier.eof())
+                {
+                    // Noeud sur lequel on est.
+                    Noeud & noeud_courant = grille_sommet[i * Colonnes + j];
+                    // Pair permettant de retrouver à partir d'un noeud sa position dans la grille.
+                    pair<int, int> poistion_noeud_grille(i, j);
+                    // Application dans données membres du noeud courant.
+                    noeud_courant.set_pos(poistion_noeud_grille);
+                    // On fix la hauteur du noeud.
+                    fichier >> hauteur_noeud;
+                    noeud_courant.set_hauteur(Altitude(hauteur_noeud));
+                }
+                else
+                {
+                    cout << "Erreur dans l'acquisition du fichier" << endl;
+                }
+            }
+        }
+        fichier.close();
+    }
+    else
+    {
+        cout << "Erreur dans l'ouverture du fichier" << endl;
+    }
 }
 
 Altitude Graph::Distance_voisin_noeud(Noeud &origine, Noeud &voisin)
@@ -53,6 +84,7 @@ Altitude Graph::Distance_voisin_noeud(Noeud &origine, Noeud &voisin)
 
 int Graph::indice_Noeud(const int &i, const int &j) const
 {
+    assert(i >= 0 && i < Lignes && j >= 0 && j < Colonnes && "Echec, merci de spécifier des valeurs dans les bornes de la grille.\n");
     return i * Colonnes + j;
 }
 int Graph::indice_Noeud_depuis_ligne(const int &i) const
@@ -140,6 +172,25 @@ Altitude Graph::floorSqrt(Altitude &x)
     return ans;
 }
 
+void Graph::affiche_graph()
+{
+    cout << grille_sommet[0].get_hauteur() << endl;
+    for (int i = 0; i < Lignes; i++)
+    {
+        for (int j = 0; j < Colonnes; j++)
+        {
+            Noeud Noeud_courant = grille_sommet[i * Colonnes + j];
+            Noeud_courant.affiche_noeud();
+            if (j < Colonnes - 1)
+                cout << "\033[1;" << 1 << "m"
+                     << "=="
+                     << "\033[0m";
+        }
+        cout << endl;
+        cout << endl;
+        // TODO : On peut faire un affiche pour || qui lie les noeuds au dessus.
+    }
+}
 // Pour accéder à la première ligne du tableau 1D on fait :
 // *Graph[C * i + j]
 /*

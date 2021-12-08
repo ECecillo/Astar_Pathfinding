@@ -4,6 +4,8 @@
 #include <iostream>
 #include "noeud.h"
 #include "altitude.h"
+#include <fstream>
+#include <cassert>
 
 class Graph
 {
@@ -11,11 +13,13 @@ public:
     // L : Le nombre de ligne.
     // C : le nombre de Colonne pour le tableau.
     Graph();
-    Graph(int &L, int &C);
+    Graph(string nomFichier);
     ~Graph();
 
-    // Procédures et Fonctions du module Graph.
-
+    // ======= Procédures et Fonctions du module Graph.
+    
+    // Procédure qui va lire un fichier en définissant les données membres de la classe.
+    void lecture_fichier_graph(string nomFichier); 
     // Calcule la racine carré en O(log n)
     // cf(https://www.geeksforgeeks.org/square-root-of-an-integer/)
     Altitude floorSqrt(Altitude &x);
@@ -38,7 +42,7 @@ public:
     int indice_Noeud_voisin(Noeud& ref, string voisin) const;
 
     // Affiche la valeur du sommet aux coordonnées (x,y).
-
+    void affiche_graph();
 private:
     Noeud *grille_sommet;
     int Lignes;
