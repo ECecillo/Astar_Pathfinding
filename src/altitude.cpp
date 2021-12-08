@@ -2,25 +2,45 @@
 #include "module/altitude.h"
 #include <cassert>
 
-ostream &operator<<(ostream& flux, const Altitude & e)
+ostream &operator<<(ostream& flux, const Altitude &h)
 {
-  e.affichageAltitudeent(flux);
+  h.affichageAltitudeent(flux);
   return flux;  
 }
 void Altitude::affichageAltitudeent(ostream& flux) const
 {
-  flux << e;
+  flux << h;
 }
-bool Altitude::operator<(const Altitude& e_cmp)
+int Altitude::operator-(const Altitude& h2)
 {
-  return (this->e < e_cmp.e);
+  return (h - h2.h);
 }
-bool Altitude::operator>(const Altitude& e_cmp)
+int Altitude::operator+(Altitude h2)
 {
-  return (this->e > e_cmp.e);
+  return (h + h2.h);
 }
-bool Altitude::operator==(const Altitude& e_cmp) const
+int Altitude::operator/(Altitude h2)
+{
+  return (h / h2.h);
+}
+int Altitude::operator*(Altitude& h2)
+{
+  return (h * h2.h);
+}
+bool Altitude::operator<=(const Altitude& h2)
+{
+  return (h <= h2.h);
+}
+bool Altitude::operator<(const Altitude& h_cmp)
+{
+  return (this->h < h_cmp.h);
+}
+bool Altitude::operator>(const Altitude& h_cmp)
+{
+  return (this->h > h_cmp.h);
+}
+bool Altitude::operator==(const Altitude& h_cmp) const
 {
   //assert(this->e == e_cmp.e);
-  return (e_cmp.e == this->e);
+  return (h_cmp.h == this->h);
 }
