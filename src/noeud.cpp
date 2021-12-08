@@ -73,3 +73,9 @@ void Noeud::affiche_noeud()
              << "\033[0m"; */
     }
 }
+bool Noeud::operator==(Noeud &n) const
+{
+    return (h == n.get_hauteur() &&
+    pos.first == n.pos.first &&
+    pos.second == n.pos.second);
+}
