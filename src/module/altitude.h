@@ -19,6 +19,11 @@ public:
     bool operator>(const Altitude &h);
     //On va comparer si 2 éléments sont égaux ou non.
     bool operator==(const Altitude &h) const;
+    int operator-(const Altitude& h);
+    int operator+(Altitude h);
+    int operator*(Altitude& h);
+    int operator/(Altitude h);
+    bool operator<=(const Altitude&);
 private:
     int h;
 };
