@@ -12,6 +12,7 @@ public:
     Noeud(Altitude &);
     ~Noeud();
 
+    bool operator==(Noeud&) const;
     void set_hauteur(Altitude);
     Altitude get_hauteur();
 
@@ -31,6 +32,7 @@ private:
     char couleur;
     // Indice de position du Noeud dans la grille.
     pair<int, int> pos;
+    pair<int, int> parent;
     Altitude h; // L'altitude du sommet.
 };
 

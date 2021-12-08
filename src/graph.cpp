@@ -43,7 +43,7 @@ void Graph::lecture_fichier_graph(string nomFichier)
                 if (!fichier.eof())
                 {
                     // Noeud sur lequel on est.
-                    Noeud & noeud_courant = grille_sommet[i * Colonnes + j];
+                    Noeud &noeud_courant = grille_sommet[i * Colonnes + j];
                     // Pair permettant de retrouver à partir d'un noeud sa position dans la grille.
                     pair<int, int> poistion_noeud_grille(i, j);
                     // Application dans données membres du noeud courant.
@@ -191,6 +191,52 @@ void Graph::affiche_graph()
         // TODO : On peut faire un affiche pour || qui lie les noeuds au dessus.
     }
 }
+void Graph::met_tous_les_noeuds_blanc()
+{
+    char couleur_blanc = 'b';
+    for(int i = 0; i < Lignes * Colonnes; i++)
+        grille_sommet[i].set_couleur(couleur_blanc);
+}
+
+void Graph::ajoute_noeud_voisin(Noeud &n)
+{
+    // On doit vérifier si on est en train ou on a déjà vérifié un des noeuds voisin via sa couleur.
+    if(!(n.get_couleur() == 'g' || !n.get_couleur() == 'n'))
+    {
+        // On va ajouter le 
+    }
+}
+void Graph::retrouve_chemin(Noeud& depart, Noeud& arrive, vector<int>& plus_courte_distance)
+{
+    // On doit mettre tous nos Noeuds en blanc (comme on utilise pas de tableau de bool pour éviter de prendre de la mémoire dans la pile).
+    met_tous_les_noeuds_blanc();
+
+    // On initialise une file de priorité qui va contenir l'indice globale d'un noeud et la distance parcourue.
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> file_meilleur_chemin;
+
+    // On créer la pair de notre noeud de départ qui a (indice_globale, 0), où 0 = distance parcourue.
+    pair<int,int> p(indice_Noeud(depart.get_pos_i(), depart.get_pos_j()), 0);
+
+    // On met dans notre file la pair qui correspond au noeud de départ.
+    file_meilleur_chemin.push(p);
+
+    // On va colorier le noeud de depart en gris car on va traiter ces voisins.
+    char couleur_grise, couleur_blanche, couleur_noir;
+    couleur_grise = 'g';
+    depart.set_couleur(couleur_grise);
+    // Debut de la recherche, tant que la file de priorité n'est pas vide on va traiter tous les noeuds dans la file.
+    while(!file_meilleur_chemin.empty())
+    {
+        // On va traiter le première élément qui a le coût le plus bas (deuxième element dans la pair), 
+
+        // On regarde les voisins de cette élément et on lui met ces voisins.
+
+
+        // On met le noeud que l'on vient de traiter à la couleur noir.
+    }
+
+}
+
 // Pour accéder à la première ligne du tableau 1D on fait :
 // *Graph[C * i + j]
 /*
