@@ -4,6 +4,7 @@
         "limits": "cpp",
         "type_traits": "cpp",
         "string": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "valarray": "cpp"
     }
 }

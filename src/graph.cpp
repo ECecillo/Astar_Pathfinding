@@ -1,5 +1,6 @@
 #include "module/graph.h"
 #include "module/altitude.h"
+#include "module/indexed_priority_queue.h"
 
 using namespace std;
 
@@ -211,8 +212,9 @@ void Graph::retrouve_chemin(Noeud& depart, Noeud& arrive, vector<int>& plus_cour
     // On doit mettre tous nos Noeuds en blanc (comme on utilise pas de tableau de bool pour éviter de prendre de la mémoire dans la pile).
     met_tous_les_noeuds_blanc();
 
-    // On initialise une file de priorité qui va contenir l'indice globale d'un noeud et la distance parcourue.
-    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> file_meilleur_chemin;
+    indexed_priority_queue<int, int> PQ;
+    // On initialise une file de priorité qui va contenir l'indice globale d'un noeud et la distance parcourue du plus petit au plus grand.
+    vector<pair<
 
     // On créer la pair de notre noeud de départ qui a (indice_globale, 0), où 0 = distance parcourue.
     pair<int,int> p(indice_Noeud(depart.get_pos_i(), depart.get_pos_j()), 0);
