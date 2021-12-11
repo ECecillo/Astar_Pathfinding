@@ -8,6 +8,8 @@
 #include <cassert>
 #include <queue>
 #include <vector>
+#include "math.h"
+#include "indexed_priority_queue.h"
 
 class Graph
 {
@@ -22,36 +24,38 @@ public:
     
     // Procédure qui va lire un fichier en définissant les données membres de la classe.
     void lecture_fichier_graph(string nomFichier); 
-    // Calcule la racine carré en O(log n)
-    // cf(https://www.geeksforgeeks.org/square-root-of-an-integer/)
-    Altitude floorSqrt(Altitude &x);
+    
+    // Fonction qui renvoie la distance Euclidienne entre le sommet Origine et le sommet voisin en fonction de son dénivelé.
+    // Retourne la distance.
+    int Distance_voisin_noeud_3D(Noeud &origine, Noeud &voisin);
 
-    // Fonction qui renvoie la distance Euclidienne entre le sommet Origine et le voisin voisin.
+
+    // Fonction qui renvoie la distance Euclidienne entre le sommet Origine et le sommet voisin selon leur position.
     // Return : Altitude qui est le type de la hauteur.
-    Altitude Distance_voisin_noeud(Noeud &origine, Noeud &voisin);
+    int Distance_voisin_noeud_2D(Noeud &origine, Noeud &voisin);
 
     // Retourne l'indice globale d'un Noeud avec des coordo passés en paramètre.
-    int indice_Noeud(const int & i, const int& j) const;
+    int indice_Noeud(Noeud& n) const;
 
     // Renvoie le Noeud (indice globale) qui correspond aux coordo (i,0).
-    int indice_Noeud_depuis_ligne(const int &i) const;
+    int indice_Noeud_depuis_ligne(Noeud& n) const;
 
     // Renvoie le Noeud qui correspond aux coordo (j,0).
-    int indice_Noeud_depuis_colonne(const int& j) const;
+    int indice_Noeud_depuis_colonne(Noeud& n) const;
 
     // Retourne l'altitude d'un Noeud dont on a passé l'indice globale en paramètre.
-    Altitude Altitude_Noeud(const int& n) const;
+    Altitude Altitude_Noeud(Noeud& n) const;
 
     // Prend en paramètre l'indice du noeud de ref et une chaine de cara pour savoir quelle voisin retourner (Nord, Sud, Est, Ouest).
-    int indice_Noeud_voisin(Noeud& ref, string voisin) const;
+    int indice_Noeud_voisin(Noeud& ref, int& voisin) const;
     
-    // Procédure qui prend un noeud n en paramètre et qui va mettre les Noeuds voisin à N dans un/e ....
-    void ajoute_noeud_voisin(Noeud& n);
+    //
+    // fin : Noeud vers lequel va notre algo.
+    // tab_distance : le tableau avec toutes les distances depuis le noeud de depart de l'algo.
+    void ajoute_noeud_voisin(Noeud& n, Noeud& fin, indexed_priority_queue<int,int>& q, int tab_distance[]);
 
-    // Algorithme A* pour explications cf le README.
-    // depart : Le noeud de depart de l'algo.
-    // arrive : Le noeud auxquels on veut aller.
-    void retrouve_chemin(Noeud& depart, Noeud& arrive, vector<int>& plus_courte_distance);
+    // Algorithme A*.
+    void Astar(Noeud& depart, Noeud& arrive);
 
     void met_tous_les_noeuds_blanc();
 

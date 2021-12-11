@@ -1,5 +1,5 @@
 #include "module/graph.h"
-
+#include "module/indexed_priority_queue.h"
 
 int main(void)
 {

@@ -27,7 +27,7 @@ $(EXEC): $(OBJ_EXEC)
 $(OBJ_FOLDER)altitude.o: $(SRC_FOLDER)altitude.cpp
 	$(CC) -o $(OBJ_FOLDER)altitude.o -c $(SRC_FOLDER)altitude.cpp $(CFLAGS)
 
-$(OBJ_FOLDER)graph.o: $(SRC_FOLDER)graph.cpp $(MODULE_FOLDER)noeud.h $(MODULE_FOLDER)altitude.h  
+$(OBJ_FOLDER)graph.o: $(SRC_FOLDER)graph.cpp $(MODULE_FOLDER)noeud.h $(MODULE_FOLDER)altitude.h  $(MODULE_FOLDER)indexed_priority_queue.h
 	$(CC) -o $(OBJ_FOLDER)graph.o -c $(SRC_FOLDER)graph.cpp $(CFLAGS)
 
 $(OBJ_FOLDER)Noeud.o: $(SRC_FOLDER)noeud.cpp $(MODULE_FOLDER)altitude.h

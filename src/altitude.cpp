@@ -15,9 +15,9 @@ int Altitude::operator-(const Altitude& h2)
 {
   return (h - h2.h);
 }
-int Altitude::operator+(Altitude h2)
+int Altitude::operator+(int h2)
 {
-  return (h + h2.h);
+  return (h + h2);
 }
 int Altitude::operator/(Altitude h2)
 {
