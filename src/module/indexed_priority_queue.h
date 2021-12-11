@@ -1,4 +1,5 @@
 // C++ program for the above approach
+// code souce : https://www.geeksforgeeks.org/indexed-priority-queue-with-implementation/
 
 #ifndef IPQ_H
 #define IPQ_H
@@ -7,16 +8,17 @@
 using namespace std;
 
 template <class T1, class T2,
-		class Comparator = less<T2>,
-		class Hash = hash<T1> >
+		  class Comparator = less<T2>,
+		  class Hash = hash<T1>>
 
-class indexed_priority_queue {
+class indexed_priority_queue
+{
 
 	// Storing indices of values using key
 	unordered_map<T1, long long int, Hash> m;
 
 	// Container
-	vector<pair<T1, T2> > v;
+	vector<pair<T1, T2>> v;
 
 	// Size
 	long long numberOfElement;
@@ -27,38 +29,29 @@ class indexed_priority_queue {
 	// Max Capacity
 	long long capacity = LLONG_MAX;
 
-	// Obtaing the index value from hash map
-	long long int getValueIndex(T1 key)
-	{
-		if (m[key] == 0) {
-			cout << "No Such Key Exist";
-			return -1;
-		}
-		return v[m[key] - 1];
-	}
-
 	// heapify the container
-	void heapify(vector<pair<T1, T2> >& v,
-				long long int heap_size,
-				long long index)
+	void heapify(vector<pair<T1, T2>> &v,
+				 long long int heap_size,
+				 long long index)
 	{
 		long long leftChild = 2 * index + 1,
-				rightChild = 2 * index + 2,
-				suitableNode = index;
+				  rightChild = 2 * index + 2,
+				  suitableNode = index;
 
-		if (leftChild < heap_size
-			&& comp(v[suitableNode].second,
-					v[leftChild].second)) {
+		if (leftChild < heap_size && comp(v[suitableNode].second,
+										  v[leftChild].second))
+		{
 			suitableNode = leftChild;
 		}
 
-		if (rightChild < heap_size
-			&& comp(v[suitableNode].second,
-					v[rightChild].second)) {
+		if (rightChild < heap_size && comp(v[suitableNode].second,
+										   v[rightChild].second))
+		{
 			suitableNode = rightChild;
 		}
 
-		if (suitableNode != index) {
+		if (suitableNode != index)
+		{
 
 			// swap the value
 			pair<T1, T2> temp = v[index];
@@ -67,8 +60,7 @@ class indexed_priority_queue {
 
 			// updating the map
 			m[v[index].first] = index + 1;
-			m[v[suitableNode].first]
-				= suitableNode + 1;
+			m[v[suitableNode].first] = suitableNode + 1;
 
 			// heapify other affected nodes
 			heapify(v, numberOfElement,
@@ -83,14 +75,26 @@ public:
 		m.clear();
 		v.clear();
 	}
+	// Obtaing the index value from hash map
+	long long int getValueIndex(T1 key)
+	{
+		if (m[key] == 0)
+		{
+			cout << "No Such Key Exist";
+			return -1;
+		}
+		return v[m[key] - 1].second;
+	}
 
 	void push(T1 key, T2 value)
 	{
-		if (numberOfElement == capacity) {
+		if (numberOfElement == capacity)
+		{
 			cout << "Overflow";
 			return;
 		}
-		if (m[key] != 0) {
+		if (m[key] != 0)
+		{
 			cout << "Element Already Exists";
 			return;
 		}
@@ -103,9 +107,9 @@ public:
 		long long index = numberOfElement - 1;
 
 		// Comparing to parent node
-		while (index != 0
-			&& comp(v[(index - 1) / 2].second,
-					v[index].second)) {
+		while (index != 0 && comp(v[(index - 1) / 2].second,
+								  v[index].second))
+		{
 
 			// swap the value
 			pair<T1, T2> temp = v[index];
@@ -114,8 +118,7 @@ public:
 
 			// updating the map
 			m[v[index].first] = index + 1;
-			m[v[(index - 1) / 2].first]
-				= (index - 1) / 2 + 1;
+			m[v[(index - 1) / 2].first] = (index - 1) / 2 + 1;
 
 			// updating index in map
 			index = (index - 1) / 2;
@@ -124,7 +127,8 @@ public:
 
 	void pop()
 	{
-		if (numberOfElement == 0) {
+		if (numberOfElement == 0)
+		{
 			cout << "UnderFlow";
 			return;
 		}
@@ -143,7 +147,8 @@ public:
 
 	void changeAtKey(T1 key, T2 value)
 	{
-		if (m[key] == 0) {
+		if (m[key] == 0)
+		{
 			cout << "No Such Key Exist";
 			return;
 		}
@@ -154,9 +159,9 @@ public:
 		heapify(v, numberOfElement, index);
 
 		// Comparing to Parent Node
-		while (index != 0
-			&& comp(v[(index - 1) / 2].second,
-					v[index].second)) {
+		while (index != 0 && comp(v[(index - 1) / 2].second,
+								  v[index].second))
+		{
 
 			// swap the value
 			pair<T1, T2> temp = v[index];
@@ -165,26 +170,26 @@ public:
 
 			// updating the map
 			m[v[index].first] = index + 1;
-			m[v[(index - 1) / 2].first]
-				= (index - 1) / 2 + 1;
+			m[v[(index - 1) / 2].first] = (index - 1) / 2 + 1;
 
 			// updating index in map
 			index = (index - 1) / 2;
 		}
 	}
-};
-
-void display(indexed_priority_queue<int, int> IPQ)
-{
-	indexed_priority_queue<int, int> temp = IPQ;
-	while (!IPQ.empty()) {
-		pair<int, int> tmp;
-		tmp = IPQ.top();
-		IPQ.pop();
-		cout << "( " << tmp.first << ", "
-			<< tmp.second << " ) ";
+	
+	void display(indexed_priority_queue<int, int> IPQ)
+	{
+		indexed_priority_queue<int, int> temp = IPQ;
+		while (!IPQ.empty())
+		{
+			pair<int, int> tmp;
+			tmp = IPQ.top();
+			IPQ.pop();
+			cout << "( " << tmp.first << ", "
+				 << tmp.second << " ) ";
+		}
+		cout << '\n';
 	}
-	cout << '\n';
-}
+};
 
 #endif

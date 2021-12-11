@@ -5,6 +5,7 @@
         "type_traits": "cpp",
         "string": "cpp",
         "ostream": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "iostream": "cpp"
     }
 }

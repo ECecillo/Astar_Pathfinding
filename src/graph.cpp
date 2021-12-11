@@ -67,47 +67,72 @@ void Graph::lecture_fichier_graph(string nomFichier)
     }
 }
 
-Altitude Graph::Distance_voisin_noeud(Noeud &origine, Noeud &voisin)
+int Graph::Distance_voisin_noeud_3D(Noeud &origine, Noeud &voisin)
 { // On suppose que orignie et voisin sont à côté.
     // Rappel de la formule :
     // sqrt(1 + sqr(altitude_point_depart - altitude_point_arrive));
     Altitude hauteur_origine = origine.get_hauteur();
     Altitude hauteur_voisin = voisin.get_hauteur();
     // Ici il faut que l'on calcule la position du voisin par rapport à Origine.
-    Altitude difference = hauteur_origine - hauteur_voisin;
+    Altitude difference_hauteur = hauteur_origine - hauteur_voisin;
 
-    Altitude carre_difference = difference * difference;
+    int difference_position_x = origine.get_pos_i() - voisin.get_pos_i();
+    int difference_position_y = origine.get_pos_j() - voisin.get_pos_j();
 
-    Altitude base_difference = Altitude(1) + carre_difference;
+    Altitude carre_difference_hauteur = difference_hauteur * difference_hauteur;
 
-    return floorSqrt(base_difference); // On retourne la distance euclidienne entre O et F.
+    // On fait (position_des_x)²
+    int carre_difference_position_x = difference_position_x * difference_position_x;
+
+    int carre_difference_position_y = difference_position_y * difference_position_y;
+
+    int base_difference = carre_difference_hauteur + (carre_difference_position_x + carre_difference_position_y);
+
+    //
+    return sqrt(base_difference);
+}
+int Graph::Distance_voisin_noeud_2D(Noeud &origine, Noeud &voisin)
+{ // On suppose que orignie et voisin sont à côté.
+    // Rappel de la formule :
+    // sqrt(1 + sqr(altitude_point_depart - altitude_point_arrive));
+
+    int difference_position_x = origine.get_pos_i() - voisin.get_pos_i();
+    int difference_position_y = origine.get_pos_j() - voisin.get_pos_j();
+
+    // On fait (position_des_x)²
+    int carre_difference_position_x = difference_position_x * difference_position_x;
+
+    // (y1 - y2)²
+    int carre_difference_position_y = difference_position_y * difference_position_y;
+
+    return sqrt((carre_difference_position_x + carre_difference_position_y));
 }
 
-int Graph::indice_Noeud(const int &i, const int &j) const
+int Graph::indice_Noeud(Noeud &n) const
 {
-    assert(i >= 0 && i < Lignes && j >= 0 && j < Colonnes && "Echec, merci de spécifier des valeurs dans les bornes de la grille.\n");
-    return i * Colonnes + j;
+    assert(n.get_pos_i() >= 0 && n.get_pos_i() < Lignes && n.get_pos_j() >= 0 && n.get_pos_j() < Colonnes && "Echec, merci de spécifier des valeurs dans les bornes de la grille.\n");
+    return n.get_pos_i() * Colonnes + n.get_pos_j();
 }
-int Graph::indice_Noeud_depuis_ligne(const int &i) const
+int Graph::indice_Noeud_depuis_ligne(Noeud &n) const
 {
     // j = 0 car peut importe sa valeur ce qui nous intérèsse c'est la ligne associé.
-    return i * Colonnes + 0;
+    return n.get_pos_i() * Colonnes + 0;
 }
-int Graph::indice_Noeud_depuis_colonne(const int &j) const
+int Graph::indice_Noeud_depuis_colonne(Noeud &n) const
 {
-    return 0 * Colonnes + j;
+    return 0 * Colonnes + n.get_pos_j();
 }
 
-Altitude Graph::Altitude_Noeud(const int &indice_Noeud) const
+Altitude Graph::Altitude_Noeud(Noeud &n) const
 {
-    return grille_sommet[indice_Noeud].get_hauteur();
+    return n.get_hauteur();
 }
-int Graph::indice_Noeud_voisin(Noeud &ref, string voisin) const
-{
+int Graph::indice_Noeud_voisin(Noeud &ref, int &voisin) const
+{ // 0 : Nord, 1: Sud, 2: Est, 3: Ouest.
     const int indice_i_ref = ref.get_pos_i();
     const int indice_j_ref = ref.get_pos_j();
     int indice_globale_voisin = -1;
-    if (voisin == "Nord")
+    if (voisin == 0)
     {
         // On vérifie les cas pour limiter les segfault.
         if (indice_i_ref - 1 < 0)
@@ -117,7 +142,7 @@ int Graph::indice_Noeud_voisin(Noeud &ref, string voisin) const
         else
             indice_globale_voisin = (indice_i_ref - 1) * Colonnes + indice_j_ref;
     }
-    else if (voisin == "Sud")
+    else if (voisin == 1)
     {
         if (indice_i_ref + 1 > Lignes)
         {
@@ -126,7 +151,7 @@ int Graph::indice_Noeud_voisin(Noeud &ref, string voisin) const
         else
             indice_globale_voisin = (indice_i_ref + 1) * Colonnes + indice_j_ref;
     }
-    else if (voisin == "Est")
+    else if (voisin == 2)
     {
         if (indice_j_ref + 1 > Colonnes)
         {
@@ -135,7 +160,7 @@ int Graph::indice_Noeud_voisin(Noeud &ref, string voisin) const
         else
             indice_globale_voisin = indice_i_ref * Colonnes + (indice_j_ref + 1);
     }
-    else if (voisin == "Ouest")
+    else if (voisin == 3)
     {
         if (indice_j_ref - 1 < 0)
             cout << "Pas de voisin Ouest" << endl;
@@ -143,34 +168,6 @@ int Graph::indice_Noeud_voisin(Noeud &ref, string voisin) const
             indice_globale_voisin = indice_i_ref * Colonnes + (indice_j_ref - 1);
     }
     return indice_globale_voisin;
-}
-
-Altitude Graph::floorSqrt(Altitude &x)
-{
-    // Base cases
-    if (x == 0 || x == 1)
-        return x;
-
-    // Do Binary Search for floor(sqrt(x))
-    Altitude start = 1, end = x / 2, ans;
-    while (start <= end)
-    {
-        Altitude mid = (start + end) / 2;
-
-        // If x is a perfect square
-        Altitude sqr = mid * mid;
-        if (sqr == x)
-            return mid;
-
-        if (sqr <= x)
-        {
-            start = mid + Altitude(1);
-            ans = mid;
-        }
-        else // If mid*mid is greater than x
-            end = mid - 1;
-    }
-    return ans;
 }
 
 void Graph::affiche_graph()
@@ -195,48 +192,113 @@ void Graph::affiche_graph()
 void Graph::met_tous_les_noeuds_blanc()
 {
     char couleur_blanc = 'b';
-    for(int i = 0; i < Lignes * Colonnes; i++)
+    for (int i = 0; i < Lignes * Colonnes; i++)
         grille_sommet[i].set_couleur(couleur_blanc);
 }
-
-void Graph::ajoute_noeud_voisin(Noeud &n)
+void Graph::Astar(Noeud &depart, Noeud &arrive)
 {
-    // On doit vérifier si on est en train ou on a déjà vérifié un des noeuds voisin via sa couleur.
-    if(!(n.get_couleur() == 'g' || !n.get_couleur() == 'n'))
-    {
-        // On va ajouter le 
-    }
-}
-void Graph::retrouve_chemin(Noeud& depart, Noeud& arrive, vector<int>& plus_courte_distance)
-{
-    // On doit mettre tous nos Noeuds en blanc (comme on utilise pas de tableau de bool pour éviter de prendre de la mémoire dans la pile).
+    // Met tous les noeuds en blanc.
     met_tous_les_noeuds_blanc();
 
-    indexed_priority_queue<int, int> PQ;
-    // On initialise une file de priorité qui va contenir l'indice globale d'un noeud et la distance parcourue du plus petit au plus grand.
-    vector<pair<
+    // Tableau dans lequelle on va mettre toutes les distances pour chaque noeud par rapport au noeud de depart.
+    int tab_distance[Lignes * Colonnes] = {-1};
 
-    // On créer la pair de notre noeud de départ qui a (indice_globale, 0), où 0 = distance parcourue.
-    pair<int,int> p(indice_Noeud(depart.get_pos_i(), depart.get_pos_j()), 0);
+    // (Noeud, Distance).
+    pair<int, int> pair_Noeud_distance;
 
-    // On met dans notre file la pair qui correspond au noeud de départ.
-    file_meilleur_chemin.push(p);
+    // File de priorité indexé.
+    // Sa clé est le Noeud identifié par sa position.
+    // Sa valeur est la distance que l'on met dans le tableau de dist.
+    indexed_priority_queue<int, int> q;
 
-    // On va colorier le noeud de depart en gris car on va traiter ces voisins.
-    char couleur_grise, couleur_blanche, couleur_noir;
-    couleur_grise = 'g';
-    depart.set_couleur(couleur_grise);
-    // Debut de la recherche, tant que la file de priorité n'est pas vide on va traiter tous les noeuds dans la file.
-    while(!file_meilleur_chemin.empty())
+    // (depart, 0)
+    //pair_indice_distance = make_pair(indice_Noeud(depart), 0);
+
+    // On défini le parent du noeud de depart à lui même pour ne pas avoir d'erreur lorsque l'on va faire le chemin vers l'origine depuis la fin.
+    depart.indice_parent = indice_Noeud(depart);
+    ;
+    // On défini sa distance à 0 car c'est le départ.
+    depart.distance = 0;
+
+
+    // On pousse dans la file (depart, 0).
+    q.push(indice_Noeud(depart), 0);
+
+    // On commence le parcours en largeur.
+    while (!q.empty())
     {
-        // On va traiter le première élément qui a le coût le plus bas (deuxième element dans la pair), 
+        // On stock la pair (Noeud, dist) que l'on étudie.
+        pair_Noeud_distance = q.top();
+        // Defile
+        q.pop();
 
-        // On regarde les voisins de cette élément et on lui met ces voisins.
+        Noeud Noeud_courant = grille_sommet[pair_Noeud_distance.first];
 
+        if (arrive == Noeud_courant)
+            return;
 
-        // On met le noeud que l'on vient de traiter à la couleur noir.
+        // On ajoute la distance dans le tableau du noeud.
+        tab_distance[indice_Noeud(Noeud_courant)] = pair_Noeud_distance.second;
+
+        // Comme on est en train de le traiter on passe le noeud en gris.
+        Noeud_courant.set_couleur('g');
+
+        // On va parcourir un tab de voisin via la procédure ajoute_noeud_voisin qui va nous le générer !!
+        ajoute_noeud_voisin(Noeud_courant, arrive, q, tab_distance);
+        // On a terminé de traiter les voisin du noeud n donc on ne reviendra pas sur ce noeud mais sur ces voisins.
+        Noeud_courant.set_couleur('n');
     }
+}
 
+void Graph::ajoute_noeud_voisin(Noeud &n, Noeud &fin, indexed_priority_queue<int, int> &q, int tab_distance[])
+{
+    // On insère dans notre vecteur tous les voisins de n (Nord, Sud, Est, Ouest)
+    for (int i = 0; i < 4; i++)
+    { // On va de 0 à 3 car on va devoir insérer au maximum 4 Noeuds voisin de n.
+        // On stock le noeud voisin sur lequel on est en train de travailler.
+        Noeud Noeud_voisin = grille_sommet[(indice_Noeud_voisin(n, i))];
+
+        if (!(Noeud_voisin.get_couleur() == 'n'))
+        { // Si on a pas traité le voisin.
+            // Calcul du cout : distance n --> voisin
+            Noeud_voisin.distance = Distance_voisin_noeud_3D(n, Noeud_voisin);
+
+            // Ici on va ajouter la distance que l'on stock dans notre tableau de parcours depuis le noeud de départ de l'algo avec la distance que l'on vient de calculer depuis n et voisin.
+            //int poid_n_voisin = tab_distance[indice_Noeud(n)] + Noeud_voisin.distance;
+
+            // Ici on peut mettre l'option pour faire distance 2D ou 3D.
+            // Calcul de l'heuristique par vol d'oiseau (distance eucli).
+            Noeud_voisin.heuristique = Distance_voisin_noeud_3D(Noeud_voisin, fin) + Noeud_voisin.distance;
+
+            // On calcule le cout approximatif pour le noeud.
+            //Noeud_voisin.cout_noeud_voisin = poid_n_voisin + Noeud_voisin.heuristique;
+
+            Noeud_voisin.cout_noeud_voisin = tab_distance[indice_Noeud(n)] + Noeud_voisin.distance;
+            // On sauvegarde l'indice du parent pour refaire le trajet.
+            Noeud_voisin.indice_parent = indice_Noeud(n);
+
+            // Si la Distance entre n --> voisin est NULL ou que la distance entre voisin et
+
+            // On va regarder si le voisin est déjà présent dans notre file de priorité indexé.
+            int distance_dans_file_voisin = q.getValueIndex(indice_Noeud(Noeud_voisin));
+            if (!(distance_dans_file_voisin == -1))
+            { // Si le voisin n'est pas dans la file.
+                // On pousse le voisin sur la file.
+                q.push(indice_Noeud(Noeud_voisin), Noeud_voisin.cout_noeud_voisin);
+            }
+            else
+            {
+                // Si la distance dans la file indexé est supérieur à celle que l'on vient de calculer alors on remplace l'ancienne valeur pour éviter de duppliquer les noeuds.
+                if (distance_dans_file_voisin > Noeud_voisin.cout_noeud_voisin)
+                {
+                    // On met à jour la distance dans le file avec la nouvelle distance plus optimisé.
+                    q.changeAtKey(indice_Noeud(Noeud_voisin), Noeud_voisin.cout_noeud_voisin);
+
+                    tab_distance[indice_Noeud(Noeud_voisin)] = Noeud_voisin.cout_noeud_voisin;
+                }
+            }
+        }
+    }
 }
 
 // Pour accéder à la première ligne du tableau 1D on fait :

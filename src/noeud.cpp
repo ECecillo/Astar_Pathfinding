@@ -4,6 +4,12 @@ Noeud::Noeud()
 {
     h = 0;
     couleur = 'b';
+    indice_parent = 0;
+    pos.first = 0;
+    pos.second = 0;
+    distance = 0;
+    heuristique = 0;
+    cout_noeud_voisin = 0;
 }
 Noeud::~Noeud()
 {
@@ -26,7 +32,7 @@ char Noeud::get_couleur()
 {
     return this->couleur;
 }
-void Noeud::set_couleur(char &c)
+void Noeud::set_couleur(char c)
 {
     this->couleur = c;
 }
@@ -76,6 +82,6 @@ void Noeud::affiche_noeud()
 bool Noeud::operator==(Noeud &n) const
 {
     return (h == n.get_hauteur() &&
-    pos.first == n.pos.first &&
-    pos.second == n.pos.second);
+            pos.first == n.pos.first &&
+            pos.second == n.pos.second);
 }
