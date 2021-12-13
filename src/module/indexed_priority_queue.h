@@ -80,9 +80,10 @@ public:
 	{
 		if (m[key] == 0)
 		{
-			cout << "No Such Key Exist" << endl;
+			//cout << "No Such Key Exist" << endl;
 			return -1;
 		}
+
 		return v[m[key] - 1].second;
 	}
 
@@ -98,7 +99,8 @@ public:
 			cout << "Element Already Exists";
 			return;
 		}
-
+		cout << "Taille Hash : " << m.size() << endl;
+		cout << "On va mettre " << value << endl; 
 		// Adding element
 		v.push_back(make_pair(key, value));
 		numberOfElement++;
@@ -153,6 +155,7 @@ public:
 			return;
 		}
 		long long index = m[key] - 1;
+		cout << "La clé est dans changeAtKey : " << v[m[21]].first << endl;
 		v[index].second = value;
 
 		// Comparing to child nodes
@@ -180,9 +183,6 @@ public:
 	void display()
 	{
 		cout << endl;
-		cout << "(index, value)" << endl;
-		cout << "key-value pairs" << endl;
-		cout << "_______________" <<endl;
 		indexed_priority_queue<int, int> temp = *this;
 		while (!temp.empty())
 		{
@@ -192,6 +192,9 @@ public:
 			cout << "  ( " << tmp.first << ", "
 				 << tmp.second << " ) " << endl;
 		}
+		cout << "_______________" <<endl;
+		cout << "(index, value)" << endl;
+		cout << "key-value pairs" << endl;
 		cout << endl;
 	}
 };

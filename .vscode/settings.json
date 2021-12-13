@@ -6,6 +6,10 @@
         "string": "cpp",
         "ostream": "cpp",
         "valarray": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "algorithm": "cpp",
+        "istream": "cpp",
+        "sstream": "cpp",
+        "variant": "cpp"
     }
 }
