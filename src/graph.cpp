@@ -131,6 +131,7 @@ int Graph::indice_Noeud_voisin(Noeud &ref, int &voisin) const
 { // 0 : Nord, 1: Sud, 2: Est, 3: Ouest.
     const int indice_i_ref = ref.get_pos_i();
     const int indice_j_ref = ref.get_pos_j();
+
     int indice_globale_voisin = -1;
     if (voisin == 0)
     {
@@ -172,7 +173,6 @@ int Graph::indice_Noeud_voisin(Noeud &ref, int &voisin) const
 
 void Graph::affiche_graph()
 {
-    cout << grille_sommet[0].get_hauteur() << endl;
     for (int i = 0; i < Lignes; i++)
     {
         for (int j = 0; j < Colonnes; j++)
@@ -220,10 +220,8 @@ void Graph::Astar(Noeud &depart, Noeud &arrive)
     // On défini sa distance à 0 car c'est le départ.
     depart.distance = 0;
 
-
     // On pousse dans la file (depart, 0).
     q.push(indice_Noeud(depart), 0);
-
     // On commence le parcours en largeur.
     while (!q.empty())
     {
@@ -235,7 +233,10 @@ void Graph::Astar(Noeud &depart, Noeud &arrive)
         Noeud Noeud_courant = grille_sommet[pair_Noeud_distance.first];
 
         if (arrive == Noeud_courant)
+        {
+            cout << "========= Fin de l'algo ===============" << endl;
             return;
+        }
 
         // On ajoute la distance dans le tableau du noeud.
         tab_distance[indice_Noeud(Noeud_courant)] = pair_Noeud_distance.second;
@@ -245,6 +246,8 @@ void Graph::Astar(Noeud &depart, Noeud &arrive)
 
         // On va parcourir un tab de voisin via la procédure ajoute_noeud_voisin qui va nous le générer !!
         ajoute_noeud_voisin(Noeud_courant, arrive, q, tab_distance);
+        cout << "La taille de la pile après check des voisins : " << q.size() << endl;
+        q.display();
         // On a terminé de traiter les voisin du noeud n donc on ne reviendra pas sur ce noeud mais sur ces voisins.
         Noeud_courant.set_couleur('n');
     }
@@ -256,9 +259,10 @@ void Graph::ajoute_noeud_voisin(Noeud &n, Noeud &fin, indexed_priority_queue<int
     for (int i = 0; i < 4; i++)
     { // On va de 0 à 3 car on va devoir insérer au maximum 4 Noeuds voisin de n.
         // On stock le noeud voisin sur lequel on est en train de travailler.
-        Noeud Noeud_voisin = grille_sommet[(indice_Noeud_voisin(n, i))];
+        int indice_voisin = indice_Noeud_voisin(n, i);
+        Noeud Noeud_voisin = grille_sommet[indice_voisin];
 
-        if (!(Noeud_voisin.get_couleur() == 'n'))
+        if (!(Noeud_voisin.get_couleur() == 'n') && !(indice_voisin == -1))
         { // Si on a pas traité le voisin.
             // Calcul du cout : distance n --> voisin
             Noeud_voisin.distance = Distance_voisin_noeud_3D(n, Noeud_voisin);
@@ -274,17 +278,22 @@ void Graph::ajoute_noeud_voisin(Noeud &n, Noeud &fin, indexed_priority_queue<int
             //Noeud_voisin.cout_noeud_voisin = poid_n_voisin + Noeud_voisin.heuristique;
 
             Noeud_voisin.cout_noeud_voisin = tab_distance[indice_Noeud(n)] + Noeud_voisin.distance;
+            cout << "Noeud : " << indice_voisin << " Avec la Couleur " << Noeud_voisin.get_couleur() << endl;
+
             // On sauvegarde l'indice du parent pour refaire le trajet.
             Noeud_voisin.indice_parent = indice_Noeud(n);
 
             // Si la Distance entre n --> voisin est NULL ou que la distance entre voisin et
 
+            //cout << "Hauteur du Noeud " << indice_voisin << " : " << Noeud_voisin.get_hauteur() << endl;
+            //sleep(1);
             // On va regarder si le voisin est déjà présent dans notre file de priorité indexé.
-            int distance_dans_file_voisin = q.getValueIndex(indice_Noeud(Noeud_voisin));
-            if (!(distance_dans_file_voisin == -1))
+            int distance_dans_file_voisin = q.getValueIndex(indice_voisin);
+            cout << distance_dans_file_voisin << endl;
+            if (distance_dans_file_voisin == -1)
             { // Si le voisin n'est pas dans la file.
                 // On pousse le voisin sur la file.
-                q.push(indice_Noeud(Noeud_voisin), Noeud_voisin.cout_noeud_voisin);
+                q.push(indice_voisin, Noeud_voisin.cout_noeud_voisin);
             }
             else
             {
@@ -292,13 +301,23 @@ void Graph::ajoute_noeud_voisin(Noeud &n, Noeud &fin, indexed_priority_queue<int
                 if (distance_dans_file_voisin > Noeud_voisin.cout_noeud_voisin)
                 {
                     // On met à jour la distance dans le file avec la nouvelle distance plus optimisé.
-                    q.changeAtKey(indice_Noeud(Noeud_voisin), Noeud_voisin.cout_noeud_voisin);
+                    q.changeAtKey(indice_voisin, Noeud_voisin.cout_noeud_voisin);
 
-                    tab_distance[indice_Noeud(Noeud_voisin)] = Noeud_voisin.cout_noeud_voisin;
+                    tab_distance[indice_voisin] = Noeud_voisin.cout_noeud_voisin;
                 }
             }
         }
     }
+}
+void Graph::test_regression()
+{
+    affiche_graph();
+    Noeud depart = grille_sommet[0];
+    Noeud fin = grille_sommet[(Lignes * Colonnes) - 1];
+
+    Astar(depart, fin);
+
+    affiche_graph();
 }
 
 // Pour accéder à la première ligne du tableau 1D on fait :

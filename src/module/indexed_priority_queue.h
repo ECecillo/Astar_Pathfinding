@@ -8,7 +8,7 @@
 using namespace std;
 
 template <class T1, class T2,
-		  class Comparator = less<T2>,
+		  class Comparator = greater<T2>,
 		  class Hash = hash<T1>>
 
 class indexed_priority_queue
@@ -80,7 +80,7 @@ public:
 	{
 		if (m[key] == 0)
 		{
-			cout << "No Such Key Exist";
+			cout << "No Such Key Exist" << endl;
 			return -1;
 		}
 		return v[m[key] - 1].second;
@@ -176,19 +176,23 @@ public:
 			index = (index - 1) / 2;
 		}
 	}
-	
-	void display(indexed_priority_queue<int, int> IPQ)
+
+	void display()
 	{
-		indexed_priority_queue<int, int> temp = IPQ;
-		while (!IPQ.empty())
+		cout << endl;
+		cout << "(index, value)" << endl;
+		cout << "key-value pairs" << endl;
+		cout << "_______________" <<endl;
+		indexed_priority_queue<int, int> temp = *this;
+		while (!temp.empty())
 		{
 			pair<int, int> tmp;
-			tmp = IPQ.top();
-			IPQ.pop();
-			cout << "( " << tmp.first << ", "
-				 << tmp.second << " ) ";
+			tmp = temp.top();
+			temp.pop();
+			cout << "  ( " << tmp.first << ", "
+				 << tmp.second << " ) " << endl;
 		}
-		cout << '\n';
+		cout << endl;
 	}
 };
 

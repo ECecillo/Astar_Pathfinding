@@ -10,6 +10,7 @@
 #include <vector>
 #include "math.h"
 #include "indexed_priority_queue.h"
+#include <unistd.h>
 
 class Graph
 {
@@ -61,6 +62,9 @@ public:
 
     // Affiche la valeur du sommet aux coordonnées (x,y).
     void affiche_graph();
+
+    void test_regression();
+
 private:
     Noeud *grille_sommet;
     int Lignes;
