@@ -11,6 +11,14 @@
 #include "math.h"
 #include "indexed_priority_queue.h"
 #include <unistd.h>
+#include <functional>
+
+// Structure de donnée que l'on passera comme argument de la file de priorité pour classer cette dernière.
+struct Comparateur_paire
+{
+    bool operator()(const pair<int,int>&p1, const pair<int,int>& p2)
+    { return p1.second > p2.second; }
+};
 
 class Graph
 {
@@ -48,12 +56,12 @@ public:
     Altitude Altitude_Noeud(Noeud& n) const;
 
     // Prend en paramètre l'indice du noeud de ref et une chaine de cara pour savoir quelle voisin retourner (Nord, Sud, Est, Ouest).
-    int indice_Noeud_voisin(Noeud& ref, int& voisin) const;
-    
+    int indice_Noeud_voisin(Noeud& ref, int& voisin) const;    
+
     //
     // fin : Noeud vers lequel va notre algo.
     // tab_distance : le tableau avec toutes les distances depuis le noeud de depart de l'algo.
-    void ajoute_noeud_voisin(Noeud& n, Noeud& fin, indexed_priority_queue<int,int>& q, int tab_distance[]);
+    void ajoute_noeud_voisin(Noeud& n, Noeud& fin, priority_queue< pair<int, int>, vector <pair<int,int>>, Comparateur_paire> &PQ, int tab_distance[]);
 
     // Algorithme A*.
     void Astar(Noeud& depart, Noeud& arrive);
@@ -62,6 +70,8 @@ public:
 
     // Affiche la valeur du sommet aux coordonnées (x,y).
     void affiche_graph();
+
+    void affiche_file_priorite(priority_queue< pair<int, int>, vector <pair<int,int>>, Comparateur_paire>&) const;
 
     void test_regression();
 
