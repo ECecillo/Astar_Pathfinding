@@ -61,10 +61,13 @@ public:
     //
     // fin : Noeud vers lequel va notre algo.
     // tab_distance : le tableau avec toutes les distances depuis le noeud de depart de l'algo.
-    void ajoute_noeud_voisin(Noeud& n, Noeud& fin, priority_queue< pair<int, int>, vector <pair<int,int>>, Comparateur_paire> &PQ, int tab_distance[]);
+    void ajoute_noeud_voisin(Noeud& n, Noeud& fin, priority_queue< pair<int, int>, vector <pair<int,int>>, Comparateur_paire> &PQ);
 
     // Algorithme A*.
-    void Astar(Noeud& depart, Noeud& arrive);
+    // depart : Noeud de depart.
+    // fin : Noeud où on veut arriver.
+    // Chemin : Tableau d'indice (entier) qui va nous dire quelle est le chemin opti trouvé par l'algo. 
+    void Astar(Noeud& depart, Noeud& arrive, vector<int>&Chemin);
 
     void met_tous_les_noeuds_blanc();
 
