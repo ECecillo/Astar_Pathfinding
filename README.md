@@ -9,6 +9,9 @@ Avant de lire ce Readme et de compiler ce programme, il est à noter que ce dern
 \
 \
 Cependant par manque de temps, il est fort probable que cette algorithme soit aussi glouton que Dijsktra.  
+\
+Dans `module/` se trouve un fichier `indexed_priority_queue.h` qui devait à l'origine faire office de File de priorité mais due au manque de temps cette structure de donnée n'a pas pu être utilisé à cause d'un bug lié au TAS Binaire utilisé par la File.
+
 # Membres
 
 |  Nom|Prénom  |Numéros étudiant  |
