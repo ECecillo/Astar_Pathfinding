@@ -4,6 +4,7 @@
 #include <utility>
 #include "altitude.h"
 
+
 class Noeud
 {
 public:
