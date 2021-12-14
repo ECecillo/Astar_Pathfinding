@@ -79,6 +79,15 @@ void Noeud::affiche_noeud()
              << "=="
              << "\033[0m"; */
     }
+    else if (couleur == 'v')
+    {
+        std::cout << "\033[1;" << 92 << "m"
+             << "[" << h << ", (" << pos.first << ", " << pos.second << ")]"
+             << "\033[0m";
+        /* cout << "\033[1;" << 1 << "m"
+             << "=="
+             << "\033[0m"; */
+    }
 }
 bool Noeud::operator==(Noeud &n) const
 {

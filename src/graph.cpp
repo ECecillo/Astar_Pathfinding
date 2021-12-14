@@ -171,7 +171,7 @@ int Graph::indice_Noeud_voisin(Noeud &ref, int &voisin) const
     return indice_globale_voisin;
 }
 
-void Graph::affiche_graph()const
+void Graph::affiche_graph() const
 {
     for (int i = 0; i < Lignes; i++)
     {
@@ -196,7 +196,7 @@ void Graph::met_tous_les_noeuds_blanc()
     for (int i = 0; i < Lignes * Colonnes; i++)
         grille_sommet[i].set_couleur(couleur_blanc);
 }
-void Graph::Astar(Noeud &depart, Noeud &arrive, vector<int> &Chemin, int& choix_heuristique)
+void Graph::Astar(Noeud &depart, Noeud &arrive, vector<int> &Chemin, int &choix_heuristique)
 {
     // Met tous les noeuds en blanc.
     met_tous_les_noeuds_blanc();
@@ -239,11 +239,13 @@ void Graph::Astar(Noeud &depart, Noeud &arrive, vector<int> &Chemin, int& choix_
         if (indice_Noeud(arrive) == indice_Noeud(Noeud_courant))
         {
             Noeud temp = Noeud_courant; // On va parcourir tous les ancêtres du Noeud courant.
+            Noeud_courant.set_couleur('v');
             Chemin.push_back(indice_Noeud(temp));
             while (temp.indice_parent != 0)
             {
                 Chemin.push_back(temp.indice_parent);
                 temp = grille_sommet[temp.indice_parent]; // On récupère le Noeud qui est à l'indice Parent.
+                grille_sommet[temp.indice_parent].set_couleur('v');
             }
             cout << "========= Fin de l'algo ===============" << endl;
             return;
@@ -257,42 +259,42 @@ void Graph::Astar(Noeud &depart, Noeud &arrive, vector<int> &Chemin, int& choix_
         verifie[pair_Noeud_distance.first] = true;
 
         // On va afficher le chemin depart au noeud avec sa distance et le chemin depart -> pred.
-        affiche_chemin_noeud(depart, Noeud_courant);        
-         //affiche_file_priorite(PQ);
-         //affiche_graph();
-         //sleep(1);
+        affiche_chemin_noeud(depart, Noeud_courant);
+        // affiche_file_priorite(PQ);
+        // affiche_graph();
+        // sleep(1);
     }
 }
-void Graph::affiche_chemin_noeud(Noeud& depart, Noeud& courant) const
+void Graph::affiche_chemin_noeud(Noeud &depart, Noeud &courant) const
 {
     cout << "[  " << indice_Noeud(depart) << " ->  " << indice_Noeud(courant) << " ]  : " << courant.cout << " | ";
 
-        if (indice_Noeud(depart) != indice_Noeud(courant))
-        {
-            // Pour récup les indice parent sans les overwrite par inadvertance.
-            int indice_pred = courant.indice_parent;
+    if (indice_Noeud(depart) != indice_Noeud(courant))
+    {
+        // Pour récup les indice parent sans les overwrite par inadvertance.
+        int indice_pred = courant.indice_parent;
 
-            vector<int> liste_pred = {indice_Noeud(courant)};
-            while (indice_pred != indice_Noeud(depart))
-            {
-                liste_pred.emplace(liste_pred.begin(), indice_pred);
-                indice_pred = grille_sommet[indice_pred].indice_parent;
-            }
-            cout << indice_Noeud(depart);
-            for (auto &indice_de_noeud : liste_pred)
-            {
-                cout << " -> " << indice_de_noeud;
-            }
-            cout << endl;
-        }
-        else
+        vector<int> liste_pred = {indice_Noeud(courant)};
+        while (indice_pred != indice_Noeud(depart))
         {
-            cout << indice_Noeud(depart);
-            cout << endl;
+            liste_pred.emplace(liste_pred.begin(), indice_pred);
+            indice_pred = grille_sommet[indice_pred].indice_parent;
         }
+        cout << indice_Noeud(depart);
+        for (auto &indice_de_noeud : liste_pred)
+        {
+            cout << " -> " << indice_de_noeud;
+        }
+        cout << endl;
+    }
+    else
+    {
+        cout << indice_Noeud(depart);
+        cout << endl;
+    }
 }
 
-void Graph::ajoute_noeud_voisin(Noeud &n, Noeud &fin, priority_queue<pair<int, int>, vector<pair<int, int>>, Comparateur_paire> &q, bool verifie[], int& choix_heuristique)
+void Graph::ajoute_noeud_voisin(Noeud &n, Noeud &fin, priority_queue<pair<int, int>, vector<pair<int, int>>, Comparateur_paire> &q, bool verifie[], int &choix_heuristique)
 {
     // On insère dans notre vecteur tous les voisins de n (Nord, Sud, Est, Ouest)
     // On pourrait optimisé ici en modifiant la boucle par quelque chose qui traite que les noeuds qui sont valides pour notre algo.
@@ -312,20 +314,21 @@ void Graph::ajoute_noeud_voisin(Noeud &n, Noeud &fin, priority_queue<pair<int, i
                     Distance_voisin_noeud_3D(n, Noeud_voisin),                          // Distance (n,v) + distance du dernier noeud.
                     tab_calcul_Noeud[0] + n.cout,                                       // Distance depart au voisin actuel = distance (n-->Noeud_voisin) + distance N(distance depuis origine).
                     Distance_voisin_noeud_2D(Noeud_voisin, fin) + tab_calcul_Noeud[1]}; // Cout totale = Heuristique + Cout.
-
-                //cout << "Calcule du Noeud " << indice_voisin << " : Distance(" << tab_calcul_Noeud[0] << ") + depart_noeud(" << n.cout << ") où noeud = " << indice_Noeud(n) << endl;
-                cout << "g(h) = " << tab_calcul_Noeud[1] << " et f(h) = " << tab_calcul_Noeud[2] << endl;
+                if (choix_heuristique == 2)
+                {
+                    tab_calcul_Noeud[2] = Distance_voisin_noeud_3D(Noeud_voisin, fin) + tab_calcul_Noeud[1];
+                }
                 // Si la Distance entre n --> voisin est NULL ou que la distance entre voisin et
                 if (Noeud_voisin.get_couleur() == 'g')
-                { 
+                {
                     // Si le voisin que l'on regarde est dans la file alors on doit voir si le cout que l'on vient de calculer est meilleur ou moins bon que celui qui est dans la file.
 
-                    //cout << "Je suis le noeud " << indice_Noeud(Noeud_voisin) << " gris je regarde si le Noeud dans la File est meilleur ou pas" << endl;
+                    // cout << "Je suis le noeud " << indice_Noeud(Noeud_voisin) << " gris je regarde si le Noeud dans la File est meilleur ou pas" << endl;
 
                     if (tab_calcul_Noeud[1] < Noeud_voisin.cout && Noeud_voisin.cout != 0)
                     { // Si le cout que l'on vient de calculer est meilleur que celui qui a déjà été calculé et différent de 0 car c'est la valeur de base que l'on donne dans le constructeur d'un noeud et c'est impossible d'avoir un cout de 0.
 
-                        //cout << "Le noeud dans la file semble meilleur et différent de 0 ces valeurs " << " Cout calculé " << tab_calcul_Noeud[1] << " | " << "Cout dans la file " << Noeud_voisin.cout << endl;
+                        // cout << "Le noeud dans la file semble meilleur et différent de 0 ces valeurs " << " Cout calculé " << tab_calcul_Noeud[1] << " | " << "Cout dans la file " << Noeud_voisin.cout << endl;
 
                         Noeud_voisin.distance = tab_calcul_Noeud[0];
 
@@ -392,10 +395,11 @@ void Graph::test_regression(int choix_Heuristique)
     Astar(depart, fin, Chemin_Algo, choix_Heuristique);
 
     affiche_graph();
-    cout << "Le chemin finale est :" << endl;
-    for (auto &indice_chemin : Chemin_Algo)
+    /* cout << "Le chemin finale est :" << endl;
+    for (int i = Chemin_Algo.size() - 1; i >= 0; i--)
     {
-        cout << indice_chemin << " ";
-    }
+
+    } */
+
     cout << indice_Noeud(depart) << endl;
-}   
+}

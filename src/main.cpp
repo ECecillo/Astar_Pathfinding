@@ -31,11 +31,13 @@ void menu_programme_principale(string & nomFichier)
         {
             // Graph avec la distance Heuristique en 2D.
             test.test_regression(1);
+            boucle_programme = false;
         }
         else if (choix_utilisateur == '2')
         {
             //
             test.test_regression(2);
+            boucle_programme = false;
         }
         else
         {
