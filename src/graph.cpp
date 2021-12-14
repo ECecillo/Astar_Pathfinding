@@ -257,7 +257,7 @@ void Graph::Astar(Noeud &depart, Noeud &arrive, vector<int> &Chemin)
         verifie[pair_Noeud_distance.first] = true;
 
         // On va afficher le chemin depart au noeud avec sa distance et le chemin depart -> pred.
-        cout << "[  " << indice_Noeud(depart) << " ->  " << indice_Noeud(Noeud_courant) << " ]  : " << Noeud_courant.distance << " | ";
+        cout << "[  " << indice_Noeud(depart) << " ->  " << indice_Noeud(Noeud_courant) << " ]  : " << Noeud_courant.cout << " | ";
 
         if (indice_Noeud(depart) != indice_Noeud(Noeud_courant))
         {
@@ -282,8 +282,9 @@ void Graph::Astar(Noeud &depart, Noeud &arrive, vector<int> &Chemin)
             cout << indice_Noeud(depart);
             cout << endl;
         }
-        // affiche_file_priorite(PQ);
-        // sleep(5);
+         //affiche_file_priorite(PQ);
+         affiche_graph();
+         sleep(1);
     }
 }
 
@@ -315,10 +316,10 @@ void Graph::ajoute_noeud_voisin(Noeud &n, Noeud &fin, priority_queue<pair<int, i
                     // Si le voisin que l'on regarde est dans la file alors on doit voir si le cout que l'on vient de calculer est meilleur ou moins bon que celui qui est dans la file.
 
                     cout << "Je suis le noeud " << indice_Noeud(Noeud_voisin) << " gris je regarde si le Noeud dans la File est meilleur ou pas" << endl;
-                    if (tab_calcul_Noeud[1] >= Noeud_voisin.cout && Noeud_voisin.cout != 0)
+                    if (tab_calcul_Noeud[1] < Noeud_voisin.cout && Noeud_voisin.cout != 0)
                     { // Si le cout que l'on vient de calculer est meilleur que celui qui a déjà été calculé et différent de 0 car c'est la valeur de base que l'on donne dans le constructeur d'un noeud et c'est impossible d'avoir un cout de 0.
 
-                        cout << "Le noeud dans la file semble meilleur et différent de 0 " << endl;
+                        cout << "Le noeud dans la file semble meilleur et différent de 0 ces valeurs " << " Cout calculé " << tab_calcul_Noeud[1] << " | " << "Cout dans la file " << Noeud_voisin.cout << endl;
 
                         Noeud_voisin.distance = tab_calcul_Noeud[0];
 
