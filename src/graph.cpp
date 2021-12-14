@@ -395,11 +395,12 @@ void Graph::test_regression(int choix_Heuristique)
     Astar(depart, fin, Chemin_Algo, choix_Heuristique);
 
     affiche_graph();
-    /* cout << "Le chemin finale est :" << endl;
+    cout << "Le chemin finale est :" << endl;
+    cout << indice_Noeud(depart);
     for (int i = Chemin_Algo.size() - 1; i >= 0; i--)
     {
+        cout << " -> "<< Chemin_Algo[i];
+    }
+    cout << endl;
 
-    } */
-
-    cout << indice_Noeud(depart) << endl;
 }

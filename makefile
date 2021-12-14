@@ -47,7 +47,7 @@ $(DATA_FOLDER):
 clean:
 	rm -f $(OBJ_FOLDER)*.o $(EXEC)
 mrproper: clean
-	rm -rf $(EXEC_FOLDER) $(OBJ_FOLDER) $(DATA_FOLDER)
+	rm -rf $(EXEC_FOLDER) $(OBJ_FOLDER)
 
 
 # Edité par CECILLON Enzo.
