@@ -8,8 +8,8 @@ Noeud::Noeud()
     pos.first = 0;
     pos.second = 0;
     distance = 0;
-    heuristique = 0;
-    cout_noeud_voisin = 0;
+    cout = 0;
+    cout_total = 0;
 }
 Noeud::~Noeud()
 {

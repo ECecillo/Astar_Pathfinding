@@ -391,6 +391,7 @@ void Graph::test_regression()
     {
         cout << indice_chemin << " ";
     }
+    cout << indice_Noeud(depart) << endl;
 }
 
 // Pour accéder à la première ligne du tableau 1D on fait :
