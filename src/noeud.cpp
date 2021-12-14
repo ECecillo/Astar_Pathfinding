@@ -1,5 +1,8 @@
 #include "module/noeud.h"
 
+using namespace std;
+
+
 Noeud::Noeud()
 {
     h = 0;
@@ -53,16 +56,14 @@ void Noeud::affiche_noeud()
 {
     if (couleur == 'b')
     {
-        cout << "\033[1;" << 7 << "m"
-             << "[" << h << ", (" << pos.first << ", " << pos.second << ")]"
-             << "\033[0m";
+        std::cout << "\033[1;" << 7 << "m" << "[" << h << ", (" << pos.first << ", " << pos.second << ")]" << "\033[0m";
         /* cout << "\033[1;" << 1 << "m"
              << "=="
              << "\033[0m"; */
     }
     else if (couleur == 'g')
     {
-        cout << "\033[1;" << 100 << "m"
+        std::cout << "\033[1;" << 31 << "m"
              << "[" << h << ", (" << pos.first << ", " << pos.second << ")]"
              << "\033[0m";
         /* cout << "\033[1;" << 1 << "m"
@@ -71,7 +72,7 @@ void Noeud::affiche_noeud()
     }
     else if (couleur == 'n')
     {
-        cout << "\033[1;" << 3 << "m"
+        std::cout << "\033[1;" << 3 << "m"
              << "[" << h << ", (" << pos.first << ", " << pos.second << ")]"
              << "\033[0m";
         /* cout << "\033[1;" << 1 << "m"
