@@ -219,7 +219,8 @@ void Graph::Astar(Noeud &depart, Noeud &arrive)
     ;
     // On défini sa distance à 0 car c'est le départ.
     depart.distance = 0;
-
+    depart.heuristique = Distance_voisin_noeud_2D(depart, arrive);
+    depart.cout_noeud_voisin = 0;
     // On pousse dans la file (depart, 0).
     PQ.push(pair_Noeud_distance);
     // On commence le parcours en largeur.
@@ -237,16 +238,11 @@ void Graph::Astar(Noeud &depart, Noeud &arrive)
             cout << "========= Fin de l'algo ===============" << endl;
             return;
         }
+        // Si le noeud que l'on regarde a déjà évalué mais que sa valeur actuel est inférieur à celle dans le tableau alors on doit le traiter car c'est potentiellment un meilleur chemin.
 
-        if (!(tab_distance[indice_Noeud(Noeud_courant)] < pair_Noeud_distance.second && tab_distance[indice_Noeud(Noeud_courant)] != -1))
-        {
-            // Si le noeud que l'on regarde a déjà évalué mais que sa valeur actuel est inférieur à celle dans le tableau alors on doit le traiter car c'est potentiellment un meilleur chemin.
+        // On va parcourir un tab de voisin via la procédure ajoute_noeud_voisin qui va nous le générer !!
+        ajoute_noeud_voisin(Noeud_courant, arrive, PQ, tab_distance);
 
-            // On va parcourir un tab de voisin via la procédure ajoute_noeud_voisin qui va nous le générer !!
-            ajoute_noeud_voisin(Noeud_courant, arrive, PQ, tab_distance);
-
-            // Affichage de la pile.
-        }
         // On a fini de traiter le Noeud Courant et on ne reviendra plus dessus.
         Noeud_courant.set_couleur('n');
 
@@ -276,8 +272,8 @@ void Graph::Astar(Noeud &depart, Noeud &arrive)
             cout << indice_Noeud(depart);
             cout << endl;
         }
-        affiche_file_priorite(PQ);
-        sleep(5);
+        //affiche_file_priorite(PQ);
+        //sleep(5);
     }
 }
 
@@ -297,14 +293,13 @@ void Graph::ajoute_noeud_voisin(Noeud &n, Noeud &fin, priority_queue<pair<int, i
             if (!(Noeud_voisin.get_couleur() == 'n'))
             { // Si on a pas traité le voisin.
                 // Calcul du cout : distance n --> voisin
-                cout << "TRUE" << endl;
                 // On va stocker les calculs liés au Noeud Voisin avant de les mettre dans ses données membres ce qui pourraient faussés les futures calculs.
                 int tab_calcul_Noeud[3] = {
-                    Distance_voisin_noeud_3D(n, Noeud_voisin),                          // Distance
-                    tab_distance[indice_Noeud(n)] + tab_calcul_Noeud[0],                // Poid = Distance + cout parent
-                    Distance_voisin_noeud_2D(Noeud_voisin, fin) + tab_calcul_Noeud[1]}; // Heuristique = Distance (v,f) + Cout(pred,v)
+                    Distance_voisin_noeud_3D(n, Noeud_voisin),                          // Distance (n,v) + distance du dernier noeud.
+                    tab_calcul_Noeud[0] + n.distance,                                   // Cout v = Distance_depuis_parent à v + distance.
+                    Distance_voisin_noeud_2D(Noeud_voisin, fin)}; // Heuristique = Distance (v,f) + distance total (distance_parent_or + dist parent v).
 
-                cout << "La distance entre le Noeud " << indice_Noeud(n) << " et son voisin " << indice_voisin << " est : " << tab_calcul_Noeud[0] << " avec un poid " << tab_calcul_Noeud[1] << " Et sa distance voisin-->fin est : " << Distance_voisin_noeud_2D(Noeud_voisin, fin) << endl;
+                cout << "La distance combiné du noeud parent de notre voisin " << indice_Noeud(n) << " et ce dernier " << indice_voisin << " est : " << tab_calcul_Noeud[0] << " avec une heuristique " << tab_calcul_Noeud[1] << " et son poid est : " << tab_calcul_Noeud[1] << endl;
                 // cout << "Noeud : " << indice_voisin << " Avec la Couleur " << Noeud_voisin.get_couleur() << endl;
 
                 // cout << "Indice Noeud parent dans Ajoute_V : " << Noeud_voisin.indice_parent << endl;
@@ -315,24 +310,21 @@ void Graph::ajoute_noeud_voisin(Noeud &n, Noeud &fin, priority_queue<pair<int, i
                 //  On va regarder si le voisin est déjà présent dans notre file de priorité indexé.
                 // int distance_dans_file_voisin = q.getValueIndex(indice_voisin);
 
-                if (Noeud_voisin.get_couleur() == 'g' && tab_distance[indice_voisin] != -1)
+                if (Noeud_voisin.get_couleur() == 'g')
                 {
                     // Si on est déjà dans la liste alors on doit comparer le cout avec le cout déjà présent dans la liste de distance.
-                    if (tab_distance[indice_voisin] >= tab_calcul_Noeud[2])
+                    if (Noeud_voisin.cout_noeud_voisin >= tab_calcul_Noeud[1])
                     { // Si le cout dans le tableau_distance est supérieur au cout du Noeud (Distance_Origine + Heuristique) alors on peut remplacer le cout dans le tableau par celui qu'on vient de calculer.
                         Noeud_voisin.distance = tab_calcul_Noeud[0];
+
                         Noeud_voisin.cout_noeud_voisin = tab_calcul_Noeud[1];
 
-                        // On calcule le cout approximatif pour le noeud.
-                        // Noeud_voisin.cout_noeud_voisin = poid_n_voisin + Noeud_voisin.heuristique;
                         Noeud_voisin.heuristique = tab_calcul_Noeud[2];
-
-                        tab_distance[indice_voisin] = Noeud_voisin.heuristique;
 
                         // On remplace son ancien parent par le nouveau parent plus avantageux.
                         Noeud_voisin.indice_parent = indice_Noeud(n);
 
-                        pair<int, int> nouvelle_pair(indice_voisin, Noeud_voisin.heuristique);
+                        pair<int, int> nouvelle_pair(indice_voisin, Noeud_voisin.cout_noeud_voisin);
 
                         q.push(nouvelle_pair);
                     }
@@ -342,22 +334,11 @@ void Graph::ajoute_noeud_voisin(Noeud &n, Noeud &fin, priority_queue<pair<int, i
                 {
                     Noeud_voisin.distance = tab_calcul_Noeud[0];
 
-                    // Ici on va ajouter la distance que l'on stock dans notre tableau de parcours depuis le noeud de départ de l'algo avec la distance que l'on vient de calculer depuis n et voisin.
-                    // int poid_n_voisin = tab_distance[indice_Noeud(n)] + Noeud_voisin.distance;
-
-                    // Ici on peut mettre l'option pour faire distance 2D ou 3D.
-                    // Calcul du cout distance origine + distance n et voisin.
                     Noeud_voisin.cout_noeud_voisin = tab_calcul_Noeud[1];
 
-                    // On calcule le cout approximatif pour le noeud.
-                    // Noeud_voisin.Heuristique = Distance (v,f) + Cout(pred,v);
                     Noeud_voisin.heuristique = tab_calcul_Noeud[2];
 
-                    // Si on est pas dans la liste des distances et donc pas dans la file
-                    // Si on a un cout plus important dans le tableau que ce qu'on vient de calculer alors il va falloir changer le coût dans le tableau.
-                    tab_distance[indice_voisin] = Noeud_voisin.heuristique;
-
-                    pair<int, int> nouvelle_pair(indice_voisin, Noeud_voisin.heuristique);
+                    pair<int, int> nouvelle_pair(indice_voisin, Noeud_voisin.cout_noeud_voisin);
                     // On pousse le nouveau Noeud qui a un meilleur cout.
                     q.push(nouvelle_pair);
                     // On lui met comment parent le noeud qui a permis de trouver ce voisin.
