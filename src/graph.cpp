@@ -200,7 +200,11 @@ void Graph::Astar(Noeud &depart, Noeud &arrive, vector<int> &Chemin)
 {
     // Met tous les noeuds en blanc.
     met_tous_les_noeuds_blanc();
-
+    bool verifie[Lignes * Colonnes];
+    for (auto &i : verifie)
+    {
+        i = false;
+    }
     // (Noeud, Distance).
     pair<int, int> pair_Noeud_distance(indice_Noeud(depart), 0);
 
@@ -247,10 +251,10 @@ void Graph::Astar(Noeud &depart, Noeud &arrive, vector<int> &Chemin)
         // Si le noeud que l'on regarde a déjà évalué mais que sa valeur actuel est inférieur à celle dans le tableau alors on doit le traiter car c'est potentiellment un meilleur chemin.
 
         // On a fini de traiter le Noeud Courant et on ne reviendra plus dessus.
-        Noeud_courant.set_couleur('n');
 
         // On va parcourir un tab de voisin via la procédure ajoute_noeud_voisin qui va nous le générer !!
-        ajoute_noeud_voisin(Noeud_courant, arrive, PQ);
+        ajoute_noeud_voisin(Noeud_courant, arrive, PQ, verifie);
+        verifie[pair_Noeud_distance.first] = true;
 
         // On va afficher le chemin depart au noeud avec sa distance et le chemin depart -> pred.
         cout << "[  " << indice_Noeud(depart) << " ->  " << indice_Noeud(Noeud_courant) << " ]  : " << Noeud_courant.distance << " | ";
@@ -283,7 +287,7 @@ void Graph::Astar(Noeud &depart, Noeud &arrive, vector<int> &Chemin)
     }
 }
 
-void Graph::ajoute_noeud_voisin(Noeud &n, Noeud &fin, priority_queue<pair<int, int>, vector<pair<int, int>>, Comparateur_paire> &q)
+void Graph::ajoute_noeud_voisin(Noeud &n, Noeud &fin, priority_queue<pair<int, int>, vector<pair<int, int>>, Comparateur_paire> &q, bool verifie[])
 {
     // On insère dans notre vecteur tous les voisins de n (Nord, Sud, Est, Ouest)
     // On pourrait optimisé ici en modifiant la boucle par quelque chose qui traite que les noeuds qui sont valides pour notre algo.
@@ -295,7 +299,7 @@ void Graph::ajoute_noeud_voisin(Noeud &n, Noeud &fin, priority_queue<pair<int, i
         Noeud &Noeud_voisin = grille_sommet[indice_voisin];
         if (!(indice_voisin == -1))
         {
-            if (!(Noeud_voisin.get_couleur() == 'n'))
+            if (!(verifie[indice_voisin]))
             { // Si on a pas traité le voisin.
                 // On va stocker les calculs liés au Noeud Voisin avant de les mettre dans ses données membres ce qui pourraient faussés les futures calculs.
                 int tab_calcul_Noeud[3] = {
@@ -307,7 +311,7 @@ void Graph::ajoute_noeud_voisin(Noeud &n, Noeud &fin, priority_queue<pair<int, i
                 cout << "g(h) = " << tab_calcul_Noeud[1] << " et f(h) = " << tab_calcul_Noeud[2] << endl;
                 // Si la Distance entre n --> voisin est NULL ou que la distance entre voisin et
                 if (Noeud_voisin.get_couleur() == 'g')
-                {
+                { 
                     // Si le voisin que l'on regarde est dans la file alors on doit voir si le cout que l'on vient de calculer est meilleur ou moins bon que celui qui est dans la file.
 
                     cout << "Je suis le noeud " << indice_Noeud(Noeud_voisin) << " gris je regarde si le Noeud dans la File est meilleur ou pas" << endl;
