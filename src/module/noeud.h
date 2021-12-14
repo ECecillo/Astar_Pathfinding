@@ -8,10 +8,10 @@ class Noeud
 {
 public:
     // Données membres.
-    int indice_parent;     // Indice du parent dans la grille que l'on utilisera pour les aglos de PCD.
-    int distance;     // Distance entre 2 noeud.
-    int heuristique;  // Distance entre this et noeud finale (Algo A*).
-    int cout_noeud_voisin; // somme des précédents cout pour ne pas recalculer (remplace un tableau de distance).
+    int indice_parent; // Indice du parent dans la grille que l'on utilisera pour les aglos de PCD.
+    int distance;      // Distance entre 2 noeud.
+    int cout;          // Somme la distance entre 2 Noeuds et la distance entre depart et le noeud parent.
+    int cout_total;    // Le cout Total de l'opétation = Heuristique (distance this ---> Fin) + cout.
 
     // Constructeur Destructeur.
     Noeud();
