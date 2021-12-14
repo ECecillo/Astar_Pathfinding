@@ -61,7 +61,7 @@ public:
     //
     // fin : Noeud vers lequel va notre algo.
     // tab_distance : le tableau avec toutes les distances depuis le noeud de depart de l'algo.
-    void ajoute_noeud_voisin(Noeud& n, Noeud& fin, priority_queue< pair<int, int>, vector <pair<int,int>>, Comparateur_paire> &PQ);
+    void ajoute_noeud_voisin(Noeud& n, Noeud& fin, priority_queue< pair<int, int>, vector <pair<int,int>>, Comparateur_paire> &PQ, bool verifie[]);
 
     // Algorithme A*.
     // depart : Noeud de depart.
